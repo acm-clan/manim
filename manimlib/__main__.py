@@ -3,7 +3,6 @@ import manimlib.config
 import manimlib.extract_scene
 import manimlib.utils.init_config
 
-
 def main():
     args = manimlib.config.parse_cli()
 
@@ -15,3 +14,6 @@ def main():
 
         for scene in scenes:
             scene.run()
+
+if __name__ == "__main__":
+    main()
