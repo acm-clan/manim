@@ -657,6 +657,7 @@ class Mobject(object):
     # Positioning methods
 
     def center(self):
+        # self.get_center是当前位置
         self.shift(-self.get_center())
         return self
 

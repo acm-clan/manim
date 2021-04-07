@@ -499,6 +499,7 @@ class SurfaceExample(Scene):
     }
 
     def construct(self):
+        # 3d 场景使用surfaces
         surface_text = Text("For 3d scenes, try using surfaces")
         surface_text.fix_in_frame()
         surface_text.to_edge(UP)
