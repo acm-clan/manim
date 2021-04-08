@@ -337,7 +337,9 @@ class Camera(object):
         shader_program = render_group["prog"]
         self.set_shader_uniforms(shader_program, shader_wrapper)
         self.update_depth_test(shader_wrapper)
+        # 渲染顶点数据
         render_group["vao"].render(int(shader_wrapper.render_primitive))
+        # 
         if render_group["single_use"]:
             self.release_render_group(render_group)
 
@@ -367,6 +369,8 @@ class Camera(object):
 
         # Program and vertex array
         shader_program, vert_format = self.get_shader_program(shader_wrapper)
+
+        # 
         vao = self.ctx.vertex_array(
             program=shader_program,
             content=[(vbo, vert_format, *shader_wrapper.vert_attributes)],
