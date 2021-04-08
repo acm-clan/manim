@@ -170,7 +170,10 @@ class Camera(object):
             self.background_opacity
         ]
         self.init_frame()
+
+        # 初始化OpenGL
         self.init_context(ctx)
+        
         self.init_shaders()
         self.init_textures()
         self.init_light_source()
@@ -321,7 +324,10 @@ class Camera(object):
 
     # Rendering
     def capture(self, *mobjects, **kwargs):
+        # 刷新摄像机
         self.refresh_perspective_uniforms()
+
+        # 绘制每一个对象
         for mobject in mobjects:
             for render_group in self.get_render_group_list(mobject):
                 self.render(render_group)

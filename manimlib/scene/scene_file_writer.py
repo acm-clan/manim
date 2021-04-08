@@ -206,6 +206,7 @@ class SceneFileWriter(object):
 
     def write_frame(self, camera):
         if self.write_to_movie:
+            # 获取fbo数据
             raw_bytes = camera.get_raw_fbo_data()
             self.writing_process.stdin.write(raw_bytes)
 

@@ -282,7 +282,7 @@ class Scene(object):
     def get_animation_time_progression(self, animations):
         run_time = self.get_run_time(animations)
         time_progression = self.get_time_progression(run_time)
-        time_progression.set_description("".join([
+        time_progression.set_description("".join([ 
             f"Animation {self.num_plays}: {animations[0]}",
             ", etc." if len(animations) > 1 else "",
         ]))
@@ -396,6 +396,7 @@ class Scene(object):
         return wrapper
 
     def lock_static_mobject_data(self, *animations):
+        # 统计所有需要动画的对象
         movers = list(it.chain(*[
             anim.mobject.get_family()
             for anim in animations
@@ -403,6 +404,7 @@ class Scene(object):
         for mobject in self.mobjects:
             if mobject in movers or mobject.get_family_updaters():
                 continue
+            # 锁定不需要更新的对象
             self.camera.set_mobjects_as_static(mobject)
 
     def unlock_mobject_data(self):
@@ -429,6 +431,7 @@ class Scene(object):
                 alpha = t / animation.run_time
                 animation.interpolate(alpha)
             self.update_frame(dt)
+            # 写文件
             self.emit_frame()
 
     def finish_animations(self, animations):
@@ -448,11 +451,17 @@ class Scene(object):
                 "Called Scene.play with no animations"
             )
             return
+        # 从play的参数中获取所有的动画
         animations = self.anims_from_play_args(*args, **kwargs)
+        # 锁定静态的对象
         self.lock_static_mobject_data(*animations)
+        # 开始动画，调用每个动画的begin方法，并且自动加入对象到scene
         self.begin_animations(animations)
+        # 更新所有帧
         self.progress_through_animations(animations)
+        # 完成动画，清理工作
         self.finish_animations(animations)
+        # 解锁对象
         self.unlock_mobject_data()
 
     @handle_play_like_call
