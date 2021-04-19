@@ -155,11 +155,14 @@ class Scene(object):
         self.camera.capture(*self.mobjects)
 
         if self.window:
-            self.window.swap_buffers()
-            vt = self.time - self.virtual_animation_start_time
-            rt = time.time() - self.real_animation_start_time
-            if rt < vt:
-                self.update_frame(0)
+            try:
+                self.window.swap_buffers()
+                vt = self.time - self.virtual_animation_start_time
+                rt = time.time() - self.real_animation_start_time
+                if rt < vt:
+                    self.update_frame(0)
+            except:
+                exit(0)
 
     def emit_frame(self):
         if not self.skip_animations:

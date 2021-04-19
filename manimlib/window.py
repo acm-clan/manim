@@ -15,13 +15,14 @@ class Window(PygletWindow):
     cursor = True
 
     def __init__(self, scene, size=(1280, 720), **kwargs):
-        super().__init__()
+        super().__init__(size=size)
         digest_config(self, kwargs)
 
         self.scene = scene
         self.pressed_keys = set()
         self.title = str(scene)
         self.size = size
+        print("window pixel ratio:", self.pixel_ratio)
 
         mglw.activate_context(window=self)
         self.timer = Timer()
