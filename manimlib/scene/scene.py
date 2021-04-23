@@ -162,6 +162,7 @@ class Scene(object):
                 if rt < vt:
                     self.update_frame(0)
             except:
+                print("scene update frame except, exit")
                 exit(0)
 
     def emit_frame(self):
