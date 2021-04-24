@@ -52,6 +52,7 @@ class Scene(object):
         self.file_writer = SceneFileWriter(self, **self.file_writer_config)
         self.mobjects = []
         self.num_plays = 0
+        self.speed_up = 1.0
         self.time = 0
         self.skip_time = 0
         self.original_skipping_status = self.skip_animations
@@ -281,7 +282,7 @@ class Scene(object):
         return time_progression
 
     def get_run_time(self, animations):
-        return np.max([animation.run_time for animation in animations])
+        return np.max([animation.run_time for animation in animations]) * self.speed_up
 
     def get_animation_time_progression(self, animations):
         run_time = self.get_run_time(animations)
@@ -470,6 +471,7 @@ class Scene(object):
 
     @handle_play_like_call
     def wait(self, duration=DEFAULT_WAIT_TIME, stop_condition=None):
+        duration = duration*self.speed_up
         self.update_mobjects(dt=0)  # Any problems with this?
         if self.should_update_mobjects():
             self.lock_static_mobject_data()
@@ -493,6 +495,12 @@ class Scene(object):
             for n in range(n_frames):
                 self.emit_frame()
         return self
+
+    def reset_speed_up(self):
+        self.speed_up = 1.0
+
+    def go_speed_up(self):
+        self.speed_up = 0.1
 
     def wait_until(self, stop_condition, max_time=60):
         self.wait(max_time, stop_condition=stop_condition)
@@ -598,6 +606,13 @@ class Scene(object):
     def on_key_press(self, symbol, modifiers):
         try:
             char = chr(symbol)
+            if symbol == 65363 and self.speed_up > 0.1:
+                self.speed_up -= 0.1
+                print("[scene] speed", self.speed_up)
+            if symbol == 65361 and self.speed_up < 2.0:
+                self.speed_up += 0.1
+                print("[scene] speed", self.speed_up)
+
         except OverflowError:
             print(" Warning: The value of the pressed key is too large.")
             return
