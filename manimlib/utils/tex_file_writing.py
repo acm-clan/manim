@@ -32,7 +32,7 @@ def get_tex_config():
             get_manim_dir(), "manimlib", "tex_templates",
             SAVED_TEX_CONFIG["template_file"],
         )
-        with open(template_filename, "r") as file:
+        with open(template_filename, "r", encoding="utf8") as file:
             SAVED_TEX_CONFIG["tex_body"] = file.read()
     return SAVED_TEX_CONFIG
 
