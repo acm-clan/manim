@@ -43,6 +43,26 @@ class Text(SVGMobject):
         "disable_ligatures": True,
     }
 
+    def get_dpi(self):
+        import ctypes
+        import win32api
+        PROCESS_PER_MONITOR_DPI_AWARE = 2
+        MDT_EFFECTIVE_DPI = 0
+        shcore = ctypes.windll.shcore
+        monitors = win32api.EnumDisplayMonitors()
+
+        dpiX = ctypes.c_uint()
+        dpiY = ctypes.c_uint()
+        for i, monitor in enumerate(monitors):
+            shcore.GetDpiForMonitor(
+                monitor[0].handle,
+                MDT_EFFECTIVE_DPI,
+                ctypes.byref(dpiX),
+                ctypes.byref(dpiY)
+            )
+            return dpiX.value/96.0
+        return 1.0
+
     def __init__(self, text, **config):
         self.full2short(config)
         digest_config(self, config)
@@ -67,7 +87,7 @@ class Text(SVGMobject):
 
         # anti-aliasing
         if self.height is None:
-            self.scale(TEXT_MOB_SCALE_FACTOR * self.font_size)
+            self.scale(TEXT_MOB_SCALE_FACTOR * self.font_size/self.get_dpi())
 
     def remove_empty_path(self, file_name):
         with open(file_name, 'r') as fpr:
