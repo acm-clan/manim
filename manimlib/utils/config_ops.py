@@ -43,6 +43,7 @@ def digest_config(obj, kwargs, caller_locals={}):
     caller_locals = filtered_locals(caller_locals)
     all_dicts = [kwargs, caller_locals, obj.__dict__]
     all_dicts += static_configs
+    # config中所有的属性都会放到__dict__中
     obj.__dict__ = merge_dicts_recursively(*reversed(all_dicts))
 
 
